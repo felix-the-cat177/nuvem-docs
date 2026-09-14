@@ -21,9 +21,9 @@
             overflow: hidden;
         }
 
-        /* Barra de topo customizada */
+        /* Barra de topo minimalista */
         .custom-toolbar {
-            height: 52px;
+            height: 48px;
             background-color: #27272a;
             border-bottom: 1px solid #3f3f46;
             display: flex;
@@ -32,9 +32,9 @@
             padding: 0 16px;
         }
 
-        /* Título no formato de diretório dinâmico do Linux */
+        /* Indicador do Servidor Local */
         .brand-title {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             font-family: monospace, 'Courier New', Courier;
             color: #38bdf8;
@@ -42,30 +42,26 @@
             align-items: center;
             gap: 8px;
             background: #18181b;
-            padding: 6px 12px;
+            padding: 4px 10px;
             border-radius: 6px;
             border: 1px solid #3f3f46;
-            max-width: 70%;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
         }
 
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .btn {
             background-color: #3f3f46;
             color: #ffffff;
             border: none;
-            padding: 8px 14px;
+            padding: 6px 12px;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 500;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
+            transition: background-color 0.2s;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -73,10 +69,6 @@
 
         .btn:hover {
             background-color: #52525b;
-        }
-
-        .btn:active {
-            transform: scale(0.97);
         }
 
         .btn-primary {
@@ -90,7 +82,7 @@
         #ds-container {
             flex: 1;
             width: 100%;
-            height: calc(100vh - 52px);
+            height: calc(100vh - 48px);
         }
 
         #ds-frame {
@@ -102,10 +94,10 @@
 </head>
 <body>
 
-    <!-- Topo Personalizado que Atualiza com a Pasta Atual -->
+    <!-- Topo Direto e Leve -->
     <header class="custom-toolbar">
         <div class="brand-title">
-            💻 <span id="path-text">/home/pop-os_24.04_LTS_servidor/</span>
+            💻 /home/pop-os_24.04_LTS_servidor/
         </div>
 
         <div class="action-buttons">
@@ -118,55 +110,18 @@
         </div>
     </header>
 
-    <!-- Área de Exibição da Sala Pública -->
+    <!-- Área de Exibição do Repositório -->
     <main id="ds-container">
-        <div id="ds-frame">Carregando repositório de aulas...</div>
+        <div id="ds-frame">Carregando aulas...</div>
     </main>
 
-    <!-- Script Oficial da Sala Pública -->
+    <!-- Embed Direto do OnlyOffice (Sem overhead de scripts externos) -->
     <script src="https://docspace-mome08.onlyoffice.com/static/scripts/sdk/2.2.0/api.js?src=https%3A%2F%2Fdocspace-mome08.onlyoffice.com&mode=public-room&width=100%25&height=100%25&frameId=ds-frame&showHeader=false&showTitle=true&showMenu=false&showFilter=true&disableActionButton=false&infoPanelVisible=false&init=true&filter%5Bcount%5D=100&filter%5Bpage%5D=1&filter%5Bsortorder%5D=descending&filter%5Bsortby%5D=DateAndTime&filter%5Bsearch%5D=&filter%5BwithSubfolders%5D=false&id=4501771&requestToken=NC81NVdYdi9vY2ZBMno1aDR6ZWx4NnIxQXRSTmI4ZEVuQzJINll1ZmNHND0_ImRlYzVjNTcwLWUzOTMtNGU1ZS1iMmVhLTdlOGNjYzk1ZTc5ZCI&rootPath=%2Frooms%2Fshare"></script>
 
     <script>
-        const basePath = "/home/pop-os_24.04_LTS_servidor/";
-        const pathElement = document.getElementById("path-text");
-
-        // Captura os eventos de navegação enviados pelo iframe do DocSpace
-        window.addEventListener("message", (event) => {
-            if (!event.origin.includes("onlyoffice.com")) return;
-
-            let payload = event.data;
-            if (typeof payload === "string") {
-                try { payload = JSON.parse(payload); } catch(e) {}
-            }
-
-            if (!payload) return;
-
-            // Tenta identificar o nome da pasta ou caminho navegada
-            let currentFolder = "";
-
-            if (payload.folder && payload.folder.title) {
-                currentFolder = payload.folder.title;
-            } else if (payload.data && payload.data.title) {
-                currentFolder = payload.data.title;
-            } else if (payload.title) {
-                currentFolder = payload.title;
-            } else if (payload.name) {
-                currentFolder = payload.name;
-            }
-
-            // Atualiza o texto do caminho na barra superior
-            if (currentFolder && currentFolder !== "2°C a noite todas as aulas") {
-                pathElement.innerText = basePath + currentFolder + "/";
-            } else {
-                pathElement.innerText = basePath;
-            }
-        });
-
         function recarregarPainel() {
             const frame = document.querySelector("#ds-frame iframe");
-            if (frame) {
-                frame.src = frame.src;
-            }
+            if (frame) frame.src = frame.src;
         }
 
         function abrirNovoGuia() {
