@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuvem - Painel Personalizado</title>
+    <title>Servidor - Aulas CMSP</title>
     <style>
         * {
             margin: 0;
@@ -21,9 +21,9 @@
             overflow: hidden;
         }
 
-        /* Barra de Ferramentas Customizada (Fora do Iframe) */
+        /* Barra de topo customizada */
         .custom-toolbar {
-            height: 56px;
+            height: 52px;
             background-color: #27272a;
             border-bottom: 1px solid #3f3f46;
             display: flex;
@@ -32,13 +32,19 @@
             padding: 0 16px;
         }
 
+        /* Título no formato de diretório do Linux */
         .brand-title {
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             font-weight: 600;
+            font-family: monospace, 'Courier New', Courier;
             color: #38bdf8;
             display: flex;
             align-items: center;
             gap: 8px;
+            background: #18181b;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #3f3f46;
         }
 
         .action-buttons {
@@ -46,14 +52,13 @@
             gap: 10px;
         }
 
-        /* Botões Estilizados */
         .btn {
             background-color: #3f3f46;
             color: #ffffff;
             border: none;
             padding: 8px 14px;
             border-radius: 6px;
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             font-weight: 500;
             cursor: pointer;
             transition: background-color 0.2s, transform 0.1s;
@@ -78,11 +83,10 @@
             background-color: #1d4ed8;
         }
 
-        /* Container do DocSpace */
         #ds-container {
             flex: 1;
             width: 100%;
-            height: calc(100vh - 56px);
+            height: calc(100vh - 52px);
         }
 
         #ds-frame {
@@ -94,10 +98,10 @@
 </head>
 <body>
 
-    <!-- 1. Barra de Controles Própria -->
+    <!-- Topo Personalizado com o Diretório do Servidor -->
     <header class="custom-toolbar">
         <div class="brand-title">
-            <span>📁</span> Meus Documentos
+            💻 <span>/home/pop-os_24.04_LTS_servidor/</span>
         </div>
 
         <div class="action-buttons">
@@ -110,42 +114,19 @@
         </div>
     </header>
 
-    <!-- 2. Área onde o DocSpace é Renderizado -->
+    <!-- Área de Exibição da Sala Pública -->
     <main id="ds-container">
-        <div id="ds-frame">Carregando gerenciador de arquivos...</div>
+        <div id="ds-frame">Carregando repositório de aulas...</div>
     </main>
 
-    <!-- 3. Script com Parâmetros para Ocultar Elementos Nativos -->
+    <!-- Script Oficial da Sala Pública (com showHeader=false para não duplicar o topo) -->
+    <script src="https://docspace-mome08.onlyoffice.com/static/scripts/sdk/2.2.0/api.js?src=https%3A%2F%2Fdocspace-mome08.onlyoffice.com&mode=public-room&width=100%25&height=100%25&frameId=ds-frame&showHeader=false&showTitle=true&showMenu=false&showFilter=true&disableActionButton=false&infoPanelVisible=false&init=true&filter%5Bcount%5D=100&filter%5Bpage%5D=1&filter%5Bsortorder%5D=descending&filter%5Bsortby%5D=DateAndTime&filter%5Bsearch%5D=&filter%5BwithSubfolders%5D=false&id=4501771&requestToken=NC81NVdYdi9vY2ZBMno1aDR6ZWx4NnIxQXRSTmI4ZEVuQzJINll1ZmNHND0_ImRlYzVjNTcwLWUzOTMtNGU1ZS1iMmVhLTdlOGNjYzk1ZTc5ZCI&rootPath=%2Frooms%2Fshare"></script>
+
     <script>
-        // Parâmetros customizados do SDK:
-        // showHeader=false -> Oculta o cabeçalho original
-        // disableActionButton=true -> Oculta o botão nativo "+" de criar/subir
-        // showMenu=true -> Mantém o menu lateral acessível
-        const sdkUrl = "https://docspace-mome08.onlyoffice.com/static/scripts/sdk/2.2.0/api.js?" + new URLSearchParams({
-            src: "https://docspace-mome08.onlyoffice.com",
-            mode: "manager",
-            width: "100%",
-            height: "100%",
-            frameId: "ds-frame",
-            showHeader: "false",          // Esconde o cabeçalho nativo
-            showTitle: "true",            // Mantém o nome da pasta atual
-            showMenu: "true",             // Exibe a navegação lateral
-            showFilter: "true",           // Exibe a busca
-            disableActionButton: "true",  // Esconde o botão "+" nativo
-            infoPanelVisible: "false",    // Esconde o painel lateral de detalhes
-            init: "true"
-        }).toString();
-
-        // Injeta o script dinamicamente na página
-        const script = document.createElement("script");
-        script.src = sdkUrl;
-        document.body.appendChild(script);
-
-        // Funções acionadas pelos botões customizados
         function recarregarPainel() {
             const frame = document.querySelector("#ds-frame iframe");
             if (frame) {
-                frame.src = frame.src; // Força o iframe a recarregar
+                frame.src = frame.src;
             }
         }
 
