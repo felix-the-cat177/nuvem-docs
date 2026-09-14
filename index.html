@@ -32,7 +32,7 @@
             padding: 0 16px;
         }
 
-        /* Título no formato de diretório do Linux */
+        /* Título no formato de diretório dinâmico do Linux */
         .brand-title {
             font-size: 0.9rem;
             font-weight: 600;
@@ -45,6 +45,10 @@
             padding: 6px 12px;
             border-radius: 6px;
             border: 1px solid #3f3f46;
+            max-width: 70%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
         .action-buttons {
@@ -98,10 +102,10 @@
 </head>
 <body>
 
-    <!-- Topo Personalizado com o Diretório do Servidor -->
+    <!-- Topo Personalizado que Atualiza com a Pasta Atual -->
     <header class="custom-toolbar">
         <div class="brand-title">
-            💻 <span>/home/pop-os_24.04_LTS_servidor/</span>
+            💻 <span id="path-text">/home/pop-os_24.04_LTS_servidor/</span>
         </div>
 
         <div class="action-buttons">
@@ -119,10 +123,45 @@
         <div id="ds-frame">Carregando repositório de aulas...</div>
     </main>
 
-    <!-- Script Oficial da Sala Pública (com showHeader=false para não duplicar o topo) -->
+    <!-- Script Oficial da Sala Pública -->
     <script src="https://docspace-mome08.onlyoffice.com/static/scripts/sdk/2.2.0/api.js?src=https%3A%2F%2Fdocspace-mome08.onlyoffice.com&mode=public-room&width=100%25&height=100%25&frameId=ds-frame&showHeader=false&showTitle=true&showMenu=false&showFilter=true&disableActionButton=false&infoPanelVisible=false&init=true&filter%5Bcount%5D=100&filter%5Bpage%5D=1&filter%5Bsortorder%5D=descending&filter%5Bsortby%5D=DateAndTime&filter%5Bsearch%5D=&filter%5BwithSubfolders%5D=false&id=4501771&requestToken=NC81NVdYdi9vY2ZBMno1aDR6ZWx4NnIxQXRSTmI4ZEVuQzJINll1ZmNHND0_ImRlYzVjNTcwLWUzOTMtNGU1ZS1iMmVhLTdlOGNjYzk1ZTc5ZCI&rootPath=%2Frooms%2Fshare"></script>
 
     <script>
+        const basePath = "/home/pop-os_24.04_LTS_servidor/";
+        const pathElement = document.getElementById("path-text");
+
+        // Captura os eventos de navegação enviados pelo iframe do DocSpace
+        window.addEventListener("message", (event) => {
+            if (!event.origin.includes("onlyoffice.com")) return;
+
+            let payload = event.data;
+            if (typeof payload === "string") {
+                try { payload = JSON.parse(payload); } catch(e) {}
+            }
+
+            if (!payload) return;
+
+            // Tenta identificar o nome da pasta ou caminho navegada
+            let currentFolder = "";
+
+            if (payload.folder && payload.folder.title) {
+                currentFolder = payload.folder.title;
+            } else if (payload.data && payload.data.title) {
+                currentFolder = payload.data.title;
+            } else if (payload.title) {
+                currentFolder = payload.title;
+            } else if (payload.name) {
+                currentFolder = payload.name;
+            }
+
+            // Atualiza o texto do caminho na barra superior
+            if (currentFolder && currentFolder !== "2°C a noite todas as aulas") {
+                pathElement.innerText = basePath + currentFolder + "/";
+            } else {
+                pathElement.innerText = basePath;
+            }
+        });
+
         function recarregarPainel() {
             const frame = document.querySelector("#ds-frame iframe");
             if (frame) {
